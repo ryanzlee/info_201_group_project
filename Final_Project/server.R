@@ -12,6 +12,7 @@ library(dplyr)
 library(stringr)
 library(spotifyr)
 library(tidyr)
+library(ggplot2)
 source('ui.R')
 source('access_token.R')
 
@@ -58,6 +59,22 @@ shinyServer(function(input, output) {
     paste("This visulization shows info of the top 50 Chart from different countries.\n
           The current date is: ", Sys.Date())
   )
+  
+  output$tempoChart <- renderPlot({
+    testt <- chosen_playlist()
+    plot <- ggplot(data = testt) +
+      stat_bin(aes(x = tempo), binwidth = 5)
+    print(plot)
+  })
+
+  avgTempo <- reactive ({
+    testt <- chosen_playlist()
+    avg <- round(mean(testt$tempo),1)
+  })
+  
+  output$tempoText <- renderText({
+    paste("Average tempo among songs in playlist:", avgTempo())
+  })
   
   output$distTable1 <- renderTable({
     chosen_playlist()

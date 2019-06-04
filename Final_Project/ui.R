@@ -36,11 +36,14 @@ shinyUI(fluidPage(
           ),
         mainPanel(
           textOutput("infoText1"),
+          plotOutput("tempoChart"),
+          textOutput("tempoText"),
+          
           tableOutput("distTable1")
         )
       )
     ),
-    tabPanel("Tab 2", 
+    tabPanel("Tempo", 
       sidebarLayout(
         sidebarPanel(),
         mainPanel()
