@@ -76,6 +76,18 @@ shinyServer(function(input, output) {
     paste("Average tempo among songs in playlist:", avgTempo())
   })
   
+  output$keyPie <- renderPlot ({
+    testt <- chosen_playlist()
+    ee <- c(0:12)
+    keys <- as.data.frame(table(testt$key))
+    letterValues <- c("C","C#/Db","D","D#/Eb","E","E#/Fb","F","F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B")
+    newKeys <- transform(keys, Key = letterValues[match(keys$Var1, ee)])
+    bp <- ggplot(newKeys, aes(x = "", y = Freq, fill = Key, label = Freq)) +
+      geom_bar(width = 1, stat = "identity") + scale_colour_gradient(low = "#B22222", high = "#FF0000")
+    pie <- bp + coord_polar("y", start = 0) 
+    
+    print(pie)
+  })
   output$distTable1 <- renderTable({
     chosen_playlist()
   })

@@ -38,6 +38,7 @@ shinyUI(fluidPage(
           textOutput("infoText1"),
           plotOutput("tempoChart"),
           textOutput("tempoText"),
+          plotOutput("keyPie"),
           
           tableOutput("distTable1")
         )
