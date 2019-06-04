@@ -16,7 +16,8 @@ source('access_token.R')
 
 playlist_codes <- read.csv('country_playlist_codes.csv', stringsAsFactors = FALSE)
 country_list <- unique(playlist_codes$Country)
-
+playlistTest <- get_playlist('37i9dQZEVXbMDoHDwVN2tF')
+playlistTest <- data.frame(playlistTest[['tracks']][['items']], stringsAsFactors = FALSE)
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
   
@@ -53,4 +54,3 @@ shinyUI(fluidPage(
     )
   )
 ))
-beatles <- get_artist_audio_features('the beatles')

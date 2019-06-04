@@ -25,13 +25,15 @@ shinyServer(function(input, output) {
     playlist <- data.frame(playlist[['tracks']][['items']], stringsAsFactors = FALSE)
     
     # Seperates only need columns to be used and displayed.
-    playlist <- select(playlist, track.name, track.album.name, track.album.release_date, track.popularity)
-    colnames(playlist)[colnames(playlist)=="track.name"] <- "Track"
-    colnames(playlist)[colnames(playlist)=="track.album.name"] <- "Album"
-    colnames(playlist)[colnames(playlist)=="track.album.release_date"] <- "Date Released"
-    colnames(playlist)[colnames(playlist)=="track.popularity"] <- "Track Popularity"
+      playlist <- select(playlist, track.name, track.id)
+    # playlist <- select(playlist, track.name, track.album.name, track.album.release_date, track.popularity, )
+    # colnames(playlist)[colnames(playlist)=="track.name"] <- "Track"
+    # colnames(playlist)[colnames(playlist)=="track.album.name"] <- "Album"
+    # colnames(playlist)[colnames(playlist)=="track.album.release_date"] <- "Date Released"
+    # colnames(playlist)[colnames(playlist)=="track.popularity"] <- "Track Popularity"
     
-    playlist
+    # Get audio features for each song.
+    # track_features <- 
   })
   
   artist_names <- reactive({
