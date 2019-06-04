@@ -33,7 +33,10 @@ shinyServer(function(input, output) {
     # colnames(playlist)[colnames(playlist)=="track.popularity"] <- "Track Popularity"
     
     # Get audio features for each song.
-    # track_features <- 
+     track_features <- get_track_audio_features(playlist$track.id)
+     colnames(track_features)[colnames(track_features)== "id"] <- "track.id"
+     testt <- right_join(playlist, track_features, by = "track.id")
+     
   })
   
   artist_names <- reactive({
