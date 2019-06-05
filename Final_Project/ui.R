@@ -50,12 +50,20 @@ shinyUI(fluidPage(
         )
       )
     ),
-    tabPanel("Tempo", 
+    tabPanel(
+      "Danceability",
+      titlePanel("Factors of Danceability"),
       sidebarLayout(
-        sidebarPanel(),
-        mainPanel()
-      )
-    ),
+        sidebarPanel(
+          uiOutput("dropdown")
+        ),
+        mainPanel(
+          plotOutput("dance_plot"),
+          p("This is an interactive plot that shows the danceability, energy, speechiness, acousticness,
+            instrumentalness, liveness, and valence of a chosen song. The songs are from the Top Global 2019 list.")
+          )
+        )
+      ),
     tabPanel("Tab 3", 
              sidebarLayout(
                sidebarPanel(),

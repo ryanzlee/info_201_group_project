@@ -97,6 +97,16 @@ shinyServer(function(input, output) {
     paste("Average Song Length (s):", avgLength())
   })
   
+  # new reactive for chosen playlist
+  chosen_song <- reactive({
+    playlist_df <- chosen_playlist()
+    song_data <- playlist_df[playlist_df$track.name == input$x_var, ]
+    wanted_song_data <- song_data %>% select(danceability, energy, speechiness, acousticness,
+                                             instrumentalness, liveness, valence)
+    refined_song <- wanted_song_data %>% gather(key = "Features", value = "Amount")
+    refined_song
+  })
+  
   output$distTable1 <- DT::renderDataTable({
     playlist <- chosen_playlist()
     colnames(playlist)[colnames(playlist)=="track.name"] <- "Track"
@@ -104,6 +114,22 @@ shinyServer(function(input, output) {
     colnames(playlist)[colnames(playlist)=="track.album.release_date"] <- "Released"
     colnames(playlist)[colnames(playlist)=="track.popularity"] <- "Track Popularity"
     filteredTable <- select(playlist, Track, Album, Released)
+  })
+  
+  # dance plot
+  output$dance_plot <- renderPlot({
+    refined_song <- chosen_song()
+    ggplot(data = refined_song, aes(x = Features, y = Amount, fill = "red")) +
+      geom_bar(stat = "identity") + labs(title = "Danceability and Various Factors of a Chosen Song") 
+  })
+  
+  output$dropdown <- renderUI ({
+    selectInput(
+      "x_var",
+      label = "Choose a Song",
+      choices = c(chosen_playlist()$track.name)
+    )
+    
   })
   
 })
