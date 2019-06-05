@@ -20,7 +20,8 @@ source('access_token.R')
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
-  # Creates data frame for selected Top 50s Chart Country
+  
+  # Creates reactive data frame for selected Top 50s Chart Country
   chosen_playlist <- reactive({
     # Retrieves playlist dataframe using Spotify API codes
     chosen_code <- playlist_codes[playlist_codes$Country == input$Country, "Code"]
@@ -40,11 +41,8 @@ shinyServer(function(input, output) {
      testt <- right_join(playlist, track_features, by = "track.id")
      
   })
-  
-  output$infoText1 <- renderText(
-    paste("The data is from today's date;", Sys.Date())
-  )
-  
+ 
+   # Creates plotly of tempo frequencies in playlist
   output$tempoChart <- renderPlotly({
     testt <- chosen_playlist()
     plot <- ggplot(data = testt) +
@@ -53,16 +51,19 @@ shinyServer(function(input, output) {
       
     ggplotly(plot)
   })
-
+  
+  # Reactive that calculates average tempo of playlist
   avgTempo <- reactive ({
     testt <- chosen_playlist()
     avg <- round(mean(testt$tempo),1)
   })
   
+  # Outputs text for average tempo
   output$tempoText <- renderText({
     paste("Average Tempo: (beat/min)", avgTempo())
   })
   
+  # Creates pie chart of key frequencies in playlist
   output$keyPie <- renderPlot ({
     testt <- chosen_playlist()
     ee <- c(0:12)
@@ -75,9 +76,9 @@ shinyServer(function(input, output) {
       coord_polar("y", start = 0) +
       ggtitle("Key Frequencies in Playlist")
     pie
-    # ggplotly(pie)
   })
   
+  # Creates plotly histogram of song length frequencies in playlist
   output$lengthChart <- renderPlotly({
     testt <- chosen_playlist()
     #colnames(testt)[colnames(testt)=="duration_ms"] <- "length"
@@ -88,6 +89,7 @@ shinyServer(function(input, output) {
     ggplotly(times) 
   })
   
+  # Calculates the average length of chosen playlist
   avgLength <- reactive ({
     testt <- chosen_playlist()
     avg <- round(mean(testt$duration_ms)/1000,1)
@@ -97,7 +99,6 @@ shinyServer(function(input, output) {
     paste("Average Song Length (s):", avgLength())
   })
   
-  # new reactive for chosen playlist
   chosen_song <- reactive({
     playlist_df <- chosen_playlist()
     song_data <- playlist_df[playlist_df$track.name == input$x_var, ]
@@ -116,12 +117,12 @@ shinyServer(function(input, output) {
     filteredTable <- select(playlist, Track, Album, Released)
   })
   
-  # dance plot
   output$dance_plot <- renderPlot({
     refined_song <- chosen_song()
-    ggplot(data = refined_song, aes(x = Features, y = Amount, fill = "red")) +
-      geom_bar(stat = "identity") + labs(title = "Danceability and Various Factors of a Chosen Song") 
-  })
+    ggplot(data = refined_song, aes(x = Features, y = Amount)) +
+      geom_bar(stat = "identity") +
+      labs(x = "Audio Features", y = "Amount")
+  }) 
   
   output$dropdown <- renderUI ({
     selectInput(
@@ -137,7 +138,7 @@ shinyServer(function(input, output) {
     album_data <- album_data %>% select(name,duration_ms) %>% mutate(Length = duration_ms/60000)
     ggplot(album_data, aes(x="",y = Length, fill = name)) +geom_bar(stat = "identity")+ coord_polar("y") +
       scale_color_brewer(palette="Dark2") + ggtitle("Plot of length of every song in the album") + 
-      labs(y="Percentage of each song in the whole albumn",fill = "Name of the songs")
+      labs(y="Percentage of each song in the whole album",fill = "Name of the songs")
   })
-  
+
 })
