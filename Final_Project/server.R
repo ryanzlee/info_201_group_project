@@ -13,6 +13,8 @@ library(stringr)
 library(spotifyr)
 library(tidyr)
 library(ggplot2)
+library(plotly)
+library(DT)
 source('ui.R')
 source('access_token.R')
 
@@ -21,17 +23,16 @@ shinyServer(function(input, output) {
   # Creates data frame for selected Top 50s Chart Country
   chosen_playlist <- reactive({
     # Retrieves playlist dataframe using Spotify API codes
-    chosen_code <- playlist_codes[playlist_codes$Country == input$Country, ]
-    playlist <- get_playlist(chosen_code$Code)
+    chosen_code <- playlist_codes[playlist_codes$Country == input$Country, "Code"]
+    if(chosen_code == "-") {
+      chosen_code <-  input$customPlaylist
+    }
+    
+    playlist <- get_playlist(chosen_code)
     playlist <- data.frame(playlist[['tracks']][['items']], stringsAsFactors = FALSE)
     
     # Seperates only need columns to be used and displayed.
-      playlist <- select(playlist, track.name, track.id)
-    # playlist <- select(playlist, track.name, track.album.name, track.album.release_date, track.popularity, )
-    # colnames(playlist)[colnames(playlist)=="track.name"] <- "Track"
-    # colnames(playlist)[colnames(playlist)=="track.album.name"] <- "Album"
-    # colnames(playlist)[colnames(playlist)=="track.album.release_date"] <- "Date Released"
-    # colnames(playlist)[colnames(playlist)=="track.popularity"] <- "Track Popularity"
+    playlist <- select(playlist, track.name, track.id, track.album.name, track.album.release_date, track.popularity)
     
     # Get audio features for each song.
      track_features <- get_track_audio_features(playlist$track.id)
@@ -40,31 +41,17 @@ shinyServer(function(input, output) {
      
   })
   
-  artist_names <- reactive({
-    chosen_code <- playlist_codes[playlist_codes$Country == input$Country, ]
-    playlist <- get_playlist(chosen_code$Code)
-    for (i in 1:50) {
-      playlist <- data.frame(playlist[['tracks']][['items']][['track.artists']][[i]], stringsAsFactors = FALSE)
-      name_holder <- ''
-      artist_names <- ''
-      for (j in 1:nrow(playlist)) {
-        name_holder <- playlist[j, playlist$name]
-        artist_names <- cat(artist_names, name_holder)
-      }
-    }
-    
-  })
-  
   output$infoText1 <- renderText(
-    paste("This visulization shows info of the top 50 Chart from different countries.\n
-          The current date is: ", Sys.Date())
+    paste("The data is from today's date;", Sys.Date())
   )
   
-  output$tempoChart <- renderPlot({
+  output$tempoChart <- renderPlotly({
     testt <- chosen_playlist()
     plot <- ggplot(data = testt) +
-      stat_bin(aes(x = tempo), binwidth = 5)
-    print(plot)
+      stat_bin(aes(x = tempo), binwidth = 5) +
+      ggtitle("Tempo (beats/minute) Frequencies in Playlist")
+      
+    ggplotly(plot)
   })
 
   avgTempo <- reactive ({
@@ -73,7 +60,7 @@ shinyServer(function(input, output) {
   })
   
   output$tempoText <- renderText({
-    paste("Average tempo among songs in playlist:", avgTempo())
+    paste("Average Tempo: (beat/min)", avgTempo())
   })
   
   output$keyPie <- renderPlot ({
@@ -83,33 +70,40 @@ shinyServer(function(input, output) {
     letterValues <- c("C","C#/Db","D","D#/Eb","E","E#/Fb","F","F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B")
     newKeys <- transform(keys, Key = letterValues[match(keys$Var1, ee)])
     bp <- ggplot(newKeys, aes(x = "", y = Freq, fill = Key, label = Freq)) +
-      geom_bar(width = 1, stat = "identity") + scale_colour_gradient(low = "#B22222", high = "#FF0000") #color scale doesn't seem to work
-    pie <- bp + coord_polar("y", start = 0) 
-    
-    print(pie)
+      geom_bar(width = 1, stat = "identity") 
+    pie <- bp +
+      coord_polar("y", start = 0) +
+      ggtitle("Key Frequencies in Playlist")
+    pie
+    # ggplotly(pie)
   })
   
-  custom_playlist <- reactive ({
-    chosen_code <- input$customPlaylist
-    playlist <- get_playlist(chosen_code)
-    playlist <- data.frame(playlist[['tracks']][['items']], stringsAsFactors = FALSE)
-    
-    # Seperates only need columns to be used and displayed.
-    playlist <- select(playlist, track.name, track.id)
-    # playlist <- select(playlist, track.name, track.album.name, track.album.release_date, track.popularity, )
-    # colnames(playlist)[colnames(playlist)=="track.name"] <- "Track"
-    # colnames(playlist)[colnames(playlist)=="track.album.name"] <- "Album"
-    # colnames(playlist)[colnames(playlist)=="track.album.release_date"] <- "Date Released"
-    # colnames(playlist)[colnames(playlist)=="track.popularity"] <- "Track Popularity"
-    
-    # Get audio features for each song.
-    track_features <- get_track_audio_features(playlist$track.id)
-    colnames(track_features)[colnames(track_features)== "id"] <- "track.id"
-    testt <- right_join(playlist, track_features, by = "track.id")
-  }) 
+  output$lengthChart <- renderPlotly({
+    testt <- chosen_playlist()
+    #colnames(testt)[colnames(testt)=="duration_ms"] <- "length"
+    testt <- mutate(testt, length = (duration_ms)/1000)
+    times <- ggplot(data = testt) +
+      stat_bin(aes(x = length), binwidth = 10) + 
+        ggtitle("Frequencies of Different Songs Lengths (s) in Playlist")
+    ggplotly(times) 
+  })
   
-  output$distTable1 <- renderTable({
-    chosen_playlist()
+  avgLength <- reactive ({
+    testt <- chosen_playlist()
+    avg <- round(mean(testt$duration_ms)/1000,1)
+  })
+  
+  output$lengthText <- renderText({
+    paste("Average Song Length (s):", avgLength())
+  })
+  
+  output$distTable1 <- DT::renderDataTable({
+    playlist <- chosen_playlist()
+    colnames(playlist)[colnames(playlist)=="track.name"] <- "Track"
+    colnames(playlist)[colnames(playlist)=="track.album.name"] <- "Album"
+    colnames(playlist)[colnames(playlist)=="track.album.release_date"] <- "Released"
+    colnames(playlist)[colnames(playlist)=="track.popularity"] <- "Track Popularity"
+    filteredTable <- select(playlist, Track, Album, Released)
   })
   
 })

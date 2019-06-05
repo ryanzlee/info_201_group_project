@@ -12,6 +12,8 @@ library(shinythemes)
 library(dplyr)
 library(stringr)
 library(ggplot2)
+library(plotly)
+library(DT)
 source('access_token.R')
 
 playlist_codes <- read.csv('country_playlist_codes.csv', stringsAsFactors = FALSE)
@@ -22,7 +24,7 @@ playlistTest <- data.frame(playlistTest[['tracks']][['items']], stringsAsFactors
 shinyUI(fluidPage(
   
   # Application title
-  theme = shinytheme('darkly'),
+  #theme = shinytheme('darkly'),
   
   titlePanel("Spotify"),
   # Sidebar with a slider input for number of bins 
@@ -31,18 +33,20 @@ shinyUI(fluidPage(
       sidebarLayout(
         sidebarPanel(
           selectInput("Country",
-                      "Select a Country:",
+                      "Select a Country: (Choose Custom for Custom Playlist)",
                       country_list),
           textInput("customPlaylist",
-                    "Enter ANY Playlist You Want")
+                    "Enter ANY Playlist You Want (Paste Spotify URI Here)")
           ),
         mainPanel(
+          titlePanel("Distributions of Track Tempo, Key and Length of Songs in Selected Playlist"),
           textOutput("infoText1"),
-          plotOutput("tempoChart"),
+          DT::dataTableOutput("distTable1"),
+          plotlyOutput("tempoChart"),
           textOutput("tempoText"),
           plotOutput("keyPie"),
-          
-          tableOutput("distTable1")
+          plotlyOutput("lengthChart"),
+          textOutput("lengthText")
         )
       )
     ),
