@@ -36,12 +36,12 @@ shinyUI(fluidPage(
              h1("Statify")
           ),
           column(10, offset = 1,
-             h2("An application for the stats-loving audiophile, designed for Spotify")
+             h1("An application for the stats-loving audiophile, designed for Spotify")
           )
         ),
         fluidRow(
           column(10, offset = 1,
-            h4("This interactive application provides seemless integration of access
+            h3("This interactive application provides seemless integration of access
                 and exploring of audio features for various tracks, albums, and playlist
                 within Spotify. Utilizing Spotify's Web API in addition to the Spotifyr package
                 in R, users are able to easily access a variety of information about audio
