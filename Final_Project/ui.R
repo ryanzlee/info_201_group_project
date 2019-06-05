@@ -32,7 +32,9 @@ shinyUI(fluidPage(
         sidebarPanel(
           selectInput("Country",
                       "Select a Country:",
-                      country_list)
+                      country_list),
+          textInput("customPlaylist",
+                    "Enter ANY Playlist You Want")
           ),
         mainPanel(
           textOutput("infoText1"),

@@ -83,11 +83,31 @@ shinyServer(function(input, output) {
     letterValues <- c("C","C#/Db","D","D#/Eb","E","E#/Fb","F","F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B")
     newKeys <- transform(keys, Key = letterValues[match(keys$Var1, ee)])
     bp <- ggplot(newKeys, aes(x = "", y = Freq, fill = Key, label = Freq)) +
-      geom_bar(width = 1, stat = "identity") + scale_colour_gradient(low = "#B22222", high = "#FF0000")
+      geom_bar(width = 1, stat = "identity") + scale_colour_gradient(low = "#B22222", high = "#FF0000") #color scale doesn't seem to work
     pie <- bp + coord_polar("y", start = 0) 
     
     print(pie)
   })
+  
+  custom_playlist <- reactive ({
+    chosen_code <- input$customPlaylist
+    playlist <- get_playlist(chosen_code)
+    playlist <- data.frame(playlist[['tracks']][['items']], stringsAsFactors = FALSE)
+    
+    # Seperates only need columns to be used and displayed.
+    playlist <- select(playlist, track.name, track.id)
+    # playlist <- select(playlist, track.name, track.album.name, track.album.release_date, track.popularity, )
+    # colnames(playlist)[colnames(playlist)=="track.name"] <- "Track"
+    # colnames(playlist)[colnames(playlist)=="track.album.name"] <- "Album"
+    # colnames(playlist)[colnames(playlist)=="track.album.release_date"] <- "Date Released"
+    # colnames(playlist)[colnames(playlist)=="track.popularity"] <- "Track Popularity"
+    
+    # Get audio features for each song.
+    track_features <- get_track_audio_features(playlist$track.id)
+    colnames(track_features)[colnames(track_features)== "id"] <- "track.id"
+    testt <- right_join(playlist, track_features, by = "track.id")
+  }) 
+  
   output$distTable1 <- renderTable({
     chosen_playlist()
   })
