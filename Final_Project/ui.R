@@ -185,8 +185,25 @@ shinyUI(fluidPage(
         )
       )
     ),
-    tabPanel("About Us"
-    
-    )
+    tabPanel(
+      "About Us",
+      titlePanel(strong("ABOUT US")),
+      mainPanel(
+        h3("We are Team Dawgtify - Info 201 Section BC", align = "center"),
+        br(),
+        h4("Members: Shreya Balaji, Andy Cahill, Ryan Lee, Michael Yuan"),
+        br(),
+        tags$hr(),
+        h4("Shreya Balaji"),
+        p("Shreya is a freshman intending to major in Informatics and Design. In her spare time, she likes 
+          to hang out with friends and is really into film."),
+        h4("Andy Cahill"),
+        p("Andy is a sophomore intending to major in Informatics."),
+        h4("Ryan Lee"),
+        p("Ryan is a sophomore intending to major in Informatics. He enjoys golfing and finger puppets."),
+        h4("Michael Yuan"),
+        p("Michael is a freshman intending to major in Informatics.")
+        )
+      )
   )
 ))
