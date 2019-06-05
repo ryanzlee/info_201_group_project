@@ -47,7 +47,15 @@ shinyUI(fluidPage(
                 in R, users are able to easily access a variety of information about audio
                 features that Spotify keeps hidden.\n
                 In this application users will be able to access playlist data, track data, and
-                album data to obtain information about features such as danceability and tempo.
+                album data to obtain information about features such as danceability and tempo. \n
+                When dealing with data of top charts, and song hits, an interesting question to explore
+                is what makes a song popular among the population? The criteria is very subjective and
+                vague, but studies have indicated that songs should feel somewhat familiar in a good way,
+                but also unique enough to be new and exciting. Lyrically, it is often a plus point if the 
+                song has themes that are relatable to many, like family, or forbidden love, etc. But all 
+                all, what makes a song popular is very random, and up to some level of chance as well. 
+                Exploring our data and visualizations, it is possible to find some patterns and correlation,
+                but the terms are still very general!
             "),
             uiOutput("repoTab"),
             uiOutput("docTab")
