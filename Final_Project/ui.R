@@ -24,7 +24,7 @@ country_list <- unique(playlist_codes$Country)
 shinyUI(fluidPage(
   # Application title
   theme = shinytheme("flatly"),
-  titlePanel(title = "Spotify"),
+  titlePanel(title = "Statify"),
   
   # UI set up in tabsets each containing sidebar and main panel.
   # Contains different visualizations and widgets in each.
@@ -32,12 +32,26 @@ shinyUI(fluidPage(
     tabPanel("Our Mission",
       fluidPage(
         fluidRow(
-          column(12,
-            h1("Dawgtify"),
-            column(8,
-              h2("A Statistical Audiophile's Dream")
-            )
+          column(5, offset = 5,
+             h1("Statify")
+          ),
+          column(10, offset = 1,
+             h2("An application for the stats-loving audiophile, designed for Spotify")
           )
+        ),
+        fluidRow(
+          column(10, offset = 1,
+            h4("This interactive application provides seemless integration of access
+                and exploring of audio features for various tracks, albums, and playlist
+                within Spotify. Utilizing Spotify's Web API in addition to the Spotifyr package
+                in R, users are able to easily access a variety of information about audio
+                features that Spotify keeps hidden.\n
+                In this application users will be able to access playlist data, track data, and
+                album data to obtain information about features such as danceability and tempo.
+            "),
+            uiOutput("repoTab"),
+            uiOutput("docTab")
+           )
         )
       )
     ),

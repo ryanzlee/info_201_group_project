@@ -140,5 +140,16 @@ shinyServer(function(input, output) {
       scale_color_brewer(palette="Dark2") + ggtitle("Plot of length of every song in the album") + 
       labs(y="Percentage of each song in the whole album",fill = "Name of the songs")
   })
-
+  
+  # URL info for links to repo and documentation
+  repoUrl <- a("GitHub Repo", href="https://github.com/ryanzlee/info_201_group_project")
+  spotifyrUrl <- a("Spotifyr Documentation", href="https://www.rdocumentation.org/packages/spotifyr/versions/1.0.0")
+  
+  output$repoTab <- renderUI({
+    tagList("Github Repository:", repoUrl)
+  })
+  
+  output$docTab <- renderUI({
+    tagList("Spotifyr Documentation:", spotifyrUrl) 
+  })
 })
