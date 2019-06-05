@@ -132,4 +132,12 @@ shinyServer(function(input, output) {
     
   })
   
+  output$bargraph <- renderPlot({
+    album_data <- data.frame(get_album_tracks(input$AlbumId), stringsAsFactors = FALSE)
+    album_data <- album_data %>% select(name,duration_ms) %>% mutate(Length = duration_ms/60000)
+    ggplot(album_data, aes(x="",y = Length, fill = name)) +geom_bar(stat = "identity")+ coord_polar("y") +
+      scale_color_brewer(palette="Dark2") + ggtitle("Plot of length of every song in the album") + 
+      labs(y="Percentage of each song in the whole albumn",fill = "Name of the songs")
+  })
+  
 })

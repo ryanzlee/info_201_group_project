@@ -64,10 +64,17 @@ shinyUI(fluidPage(
           )
         )
       ),
-    tabPanel("Tab 3", 
+    tabPanel("Percentage of Albumn",
              sidebarLayout(
-               sidebarPanel(),
-               mainPanel()
+               sidebarPanel(
+                 textInput(
+                   "AlbumId","Enter the ID of Album:"
+                 )
+               ),
+               #5gnWhEFNbtCn0RLG2cp90g <- test code
+               mainPanel(
+                 plotOutput("bargraph")
+               )
              )
     )
   )
