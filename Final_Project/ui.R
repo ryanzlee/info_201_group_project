@@ -24,6 +24,7 @@ country_list <- unique(playlist_codes$Country)
 shinyUI(fluidPage(
   # Application title
   theme = shinytheme("flatly"),
+  tags$style("body{background-color:#F4E3DB; color:black}"),
   titlePanel(title = "Statify"),
   
   # UI set up in tabsets each containing sidebar and main panel.
@@ -41,21 +42,15 @@ shinyUI(fluidPage(
         ),
         fluidRow(
           column(10, offset = 1,
-            h3("This interactive application provides seemless integration of access
-                and exploring of audio features for various tracks, albums, and playlist
-                within Spotify. Utilizing Spotify's Web API in addition to the Spotifyr package
-                in R, users are able to easily access a variety of information about audio
-                features that Spotify keeps hidden.\n
-                In this application users will be able to access playlist data, track data, and
-                album data to obtain information about features such as danceability and tempo. \n
-                When dealing with data of top charts, and song hits, an interesting question to explore
-                is what makes a song popular among the population? The criteria is very subjective and
-                vague, but studies have indicated that songs should feel somewhat familiar in a good way,
-                but also unique enough to be new and exciting. Lyrically, it is often a plus point if the 
-                song has themes that are relatable to many, like family, or forbidden love, etc. But all 
-                all, what makes a song popular is very random, and up to some level of chance as well. 
-                Exploring our data and visualizations, it is possible to find some patterns and correlation,
-                but the terms are still very general!
+            h3("This interactive application provides seemless exploring of audio features for various tracks, albums, and playlists
+               in Spotify from the use of Spotify's Web API through the Spotifyr package
+               in R.\n
+               This application is useful for both people interested in quantifying their own tastes as well as those trying to crack the code for a hit song. \n
+               What makes a song popular in one country but not another? How fast are most hit songs? These questions and more can be answered with this app! \n
+               Studies have indicated that songs should feel somewhat familiar in a good way,
+               but also unique enough to be new and exciting. Lyrically, it is often a plus point if the
+               song has themes that are relatable to many, like family, or forbidden love, etc.
+               Explore our data and visualizations, and your might find some patterns and correlation backing up or going against these theories.
             "),
             uiOutput("repoTab"),
             uiOutput("docTab")
