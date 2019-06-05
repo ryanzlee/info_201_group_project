@@ -12,12 +12,14 @@ library(shinythemes)
 library(dplyr)
 library(stringr)
 library(ggplot2)
+library(spotifyr)
 source('access_token.R')
 
 playlist_codes <- read.csv('country_playlist_codes.csv', stringsAsFactors = FALSE)
 country_list <- unique(playlist_codes$Country)
 playlistTest <- get_playlist('37i9dQZEVXbMDoHDwVN2tF')
 playlistTest <- data.frame(playlistTest[['tracks']][['items']], stringsAsFactors = FALSE)
+
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
   
@@ -50,10 +52,16 @@ shinyUI(fluidPage(
         mainPanel()
       )
     ),
-    tabPanel("Tab 3", 
+    tabPanel("Artist Audio Features", 
              sidebarLayout(
-               sidebarPanel(),
-               mainPanel()
+               sidebarPanel(
+                 textInput("searchBar",
+                           label = "Search")
+               ),
+               mainPanel(
+                 tableOutput("audioTable"),
+                 plotOutput("audioFeatures")
+               )
              )
     )
   )

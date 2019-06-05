@@ -55,10 +55,24 @@ shinyServer(function(input, output) {
     
   })
   
-  output$infoText1 <- renderText(
-    paste("This visulization shows info of the top 50 Chart from different countries.\n
+  artist_audio_features <- reactive({
+    # temp because get_artist_audio_features function not working
+    # current_track_name <- input$searchBar
+    # audio_data <- data.frame(get_track_audio_features('3A37i9dQZF1DX0XUsuxWHRQd'), stringsAsFactors = FALSE)
+    # artist_audio_data <- data.frame(get_artist_audio_features(artist = current_artist_name), stringsAsFactors = FALSE)
+    # audio_data
+    audio_data <- data.frame(get_track_audio_features('22WV03i2lBbwNVCE1g671p'))
+    wanted_data <- audio_data %>% select(danceability, energy, speechiness, acousticness,
+                                         instrumentalness, liveness, valence)
+    # Organize data so only categories have topic
+    long_wanted_data <- wanted_data %>% gather(key = "Feature", value = "Amount")
+    long_wanted_data
+  })
+  
+  output$infoText1 <- renderText({
+    paste("This visualization shows info of the top 50 Chart from different countries.\n
           The current date is: ", Sys.Date())
-  )
+  })
   
   output$tempoChart <- renderPlot({
     testt <- chosen_playlist()
@@ -88,8 +102,17 @@ shinyServer(function(input, output) {
     
     print(pie)
   })
+  
   output$distTable1 <- renderTable({
     chosen_playlist()
   })
   
+  output$audioFeatures <- renderPlot({
+    audio_data2 <- artist_audio_features()
+    pie <- ggplot(long_wanted_data, aes(x = Feature, y = Amount, Fill = Feature)) +
+      labs(title = "Track Audio Features", x = "Audio Feature", y = "Percentage (0-1)") +
+      geom_bar(stat = 'identity', width = 1)
+    pie + coord_polar(theta = 'x', start = 90)
+    })
+
 })
