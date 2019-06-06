@@ -2,10 +2,10 @@
 # This is the user-interface definition of a Shiny web application. You can
 # run the application by clicking 'Run App' above.
 #
-# Find out more about building applications with Shiny here:
-# 
-#    http://shiny.rstudio.com/
-#
+# The UI for our application is set up on a fluidPage with various tabs
+# to navigate. Within each tab, are various pieces of information about the application
+# in addition to interactive visualizations of audio features within a given
+# song, album, or playlist.
 
 library(shiny)
 library(shinythemes)
@@ -22,7 +22,8 @@ country_list <- unique(playlist_codes$Country)
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
-  # Application title
+  
+  # Application title, them and background color
   theme = shinytheme("flatly"),
   tags$style("body{background-color:#F4E3DB; color:black}"),
   titlePanel(title = "Statify"),
@@ -30,6 +31,8 @@ shinyUI(fluidPage(
   # UI set up in tabsets each containing sidebar and main panel.
   # Contains different visualizations and widgets in each.
   tabsetPanel(
+    
+    # This Tab shows our application and its features
     tabPanel("Our Mission",
       fluidPage(
         fluidRow(
@@ -58,6 +61,10 @@ shinyUI(fluidPage(
         )
       )
     ),
+    
+    # This tab contains inputs and visualizations of tempo, key, and lengths of 
+    # songs within a chosen playlist. Users can chose from provided playlist
+    # or their own using a Spotify playlist API.
     tabPanel("Top 50 charts by Country", 
       fluidPage(
         fluidRow(
@@ -66,7 +73,7 @@ shinyUI(fluidPage(
             column(9, offset = 1,
                h4("\nThis tab shows the distibutions of track tempo, key, and length of songs in the
                selected playlist below. You may either choose one of the Top 50 Charts by country
-               or find your with the search bar.")
+               or find your own with the search bar.")
             )
           )
         ),
@@ -120,6 +127,10 @@ shinyUI(fluidPage(
         )
       )
     ),
+    
+    # This tab contains input and visualizations for the danceability features
+    # of a given track. Users select song from provided playlist(on 2nd Tab) and
+    # Creates visualization of different audio features.
     tabPanel("Danceability",
       fluidPage(
         fluidRow(
@@ -171,6 +182,10 @@ shinyUI(fluidPage(
         )
       )
     ),
+    
+    # This tab shows inputs and visualizations of the percent share of total
+    # time each song has on a given album. Takes in album API code and creates
+    # pie chart of percent shares.
     tabPanel("Percentage of Album",
       fluidPage(
         fluidRow(
@@ -202,11 +217,14 @@ shinyUI(fluidPage(
         )
       )
     ),
+    
+    # This tab showcases the different members in the group and a little
+    # about each of them.
     tabPanel(
       "About Us",
       titlePanel(strong("ABOUT US")),
       mainPanel(
-        h3("We are Team Dawgtify - Info 201 Section BC", align = "center"),
+        h3("We are Team Dawgs - Info 201 Section BC", align = "center"),
         br(),
         h4("Members: Shreya Balaji, Andy Cahill, Ryan Lee, Michael Yuan"),
         br(),
