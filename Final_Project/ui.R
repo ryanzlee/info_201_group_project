@@ -40,20 +40,17 @@ shinyUI(fluidPage(
              h1("Statify")
           ),
           column(10, offset = 1,
-             h1("An application for the stats-loving audiophile, designed for Spotify")
+             h1("An application for the stats-loving audiophile, using Spotify")
           )
         ),
         fluidRow(
           column(10, offset = 1,
-            h3("This interactive application provides seemless exploring of audio features for various tracks, albums, and playlists
-               in Spotify from the use of Spotify's Web API through the Spotifyr package
-               in R.\n
-               This application is useful for both people interested in quantifying their own tastes as well as those trying to crack the code for a hit song. \n
-               What makes a song popular in one country but not another? How fast are most hit songs? These questions and more can be answered with this app! \n
-               Studies have indicated that songs should feel somewhat familiar in a good way,
-               but also unique enough to be new and exciting. Lyrically, it is often a plus point if the
-               song has themes that are relatable to many, like family, or forbidden love, etc.
-               Explore our data and visualizations, and your might find some patterns and correlation backing up or going against these theories.
+            h3("Statify is an interactive web app that allows users to visualize Spotify data of tracks, albums and playlists.
+            Most of this data is normally hidden from view, but using the Spotify Web API we can access this data. 
+            The visualizations are made in R, with SpotifyR providing easy access to the Spotify Web API data.
+            Why should you care? This application may help answer the infamous question: what makes a hit song a hit? 
+            The app provides visualizations on tempo, key and length for songs of any country's charts, as well as other factors such as danceability. 
+            The application is also useful for the individual trying to quantify their taste, as it provides functionality to input any playlist to visualize.
             "),
             uiOutput("repoTab"),
             uiOutput("docTab")
